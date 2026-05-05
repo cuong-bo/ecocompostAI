@@ -1,49 +1,49 @@
 ﻿export const WASTE_COLORS = [
   { value: "Xanh", label: "Xanh", emoji: "🟢" },
-  { value: "Vang", label: "Vang", emoji: "🟡" },
-  { value: "Nau", label: "Nau", emoji: "🟤" },
-  { value: "Den", label: "Den", emoji: "⚫" },
+  { value: "Vàng", label: "Vàng", emoji: "🟡" },
+  { value: "Nâu", label: "Nâu", emoji: "🟤" },
+  { value: "Đen", label: "Đen", emoji: "⚫" },
 ]
 
 export const WASTE_TYPES = [
-  { value: "Rau cu", label: "Rau cu", emoji: "🥕" },
-  { value: "Trai cay", label: "Trai cay", emoji: "🍎" },
-  { value: "Xuong dong vat", label: "Xuong dong vat", emoji: "🦴" },
-  { value: "Hon hop", label: "Hon hop", emoji: "🗑️" },
-  { value: "Ba dau", label: "Ba dau", emoji: "🌱" },
-  { value: "Xac ca", label: "Xac ca", emoji: "🐟" },
+  { value: "Rau củ", label: "Rau củ", emoji: "🥕" },
+  { value: "Trái cây", label: "Trái cây", emoji: "🍎" },
+  { value: "Xương động vật", label: "Xương động vật", emoji: "🦴" },
+  { value: "Hỗn hợp", label: "Hỗn hợp", emoji: "🗑️" },
+  { value: "Bã đậu", label: "Bã đậu", emoji: "🌱" },
+  { value: "Xác cá", label: "Xác cá", emoji: "🐟" },
 ]
 
-export const LAND_UNITS = ["m2", "ha"]
+export const LAND_UNITS = ["m²", "ha"]
 
 export const CROP_TYPES = [
-  { value: "Rau an la", label: "Rau an la", emoji: "🥬" },
-  { value: "Lua", label: "Lua", emoji: "🌾" },
-  { value: "Cay an trai", label: "Cay an trai", emoji: "🍊" },
-  { value: "Hoa mau", label: "Hoa mau", emoji: "🌽" },
-  { value: "Ca chua", label: "Ca chua", emoji: "🍅" },
-  { value: "Dua leo", label: "Dua leo", emoji: "🥒" },
+  { value: "Rau ăn lá", label: "Rau ăn lá", emoji: "🥬" },
+  { value: "Lúa", label: "Lúa", emoji: "🌾" },
+  { value: "Cây ăn trái", label: "Cây ăn trái", emoji: "🍊" },
+  { value: "Hoa màu", label: "Hoa màu", emoji: "🌽" },
+  { value: "Cà chua", label: "Cà chua", emoji: "🍅" },
+  { value: "Dưa leo", label: "Dưa leo", emoji: "🥒" },
 ]
 
 export const SEASONS = [
-  { value: "Mua mua", label: "Mua mua", emoji: "🌧️" },
-  { value: "Mua nang", label: "Mua nang", emoji: "☀️" },
+  { value: "Mùa mưa", label: "Mùa mưa", emoji: "🌧️" },
+  { value: "Mùa nắng", label: "Mùa nắng", emoji: "☀️" },
 ]
 
 export const DILUTION_RATIO = {
-  "Rau an la":   80,
-  "Lua":        100,
-  "Cay an trai": 60,
-  "Hoa mau":     70,
-  "Ca chua":     50,
-  "Dua leo":     50,
+  "Rau ăn lá":   80,
+  "Lúa":        100,
+  "Cây ăn trái": 60,
+  "Hoa màu":     70,
+  "Cà chua":     50,
+  "Dưa leo":     50,
 }
 
 export const WATERING_SCHEDULE = {
-  "Rau an la":   5,
-  "Lua":        10,
-  "Cay an trai": 7,
-  "Hoa mau":     7,
-  "Ca chua":     4,
-  "Dua leo":     4,
+  "Rau ăn lá":   5,
+  "Lúa":        10,
+  "Cây ăn trái": 7,
+  "Hoa màu":     7,
+  "Cà chua":     4,
+  "Dưa leo":     4,
 }

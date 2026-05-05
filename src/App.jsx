@@ -13,13 +13,13 @@ import { calculate } from "./lib/calculator"
 const initialForm = {
   wasteKg: "",
   wasteColor: "Xanh",
-  wasteType: "Rau cu",
+  wasteType: "Rau củ",
   landArea: "",
-  landUnit: "m2",
-  cropType: "Rau an la",
+  landUnit: "m²",
+  cropType: "Rau ăn lá",
   temperature: "",
   humidity: "",
-  season: "Mua mua",
+  season: "Mùa mưa",
 }
 
 export default function App() {

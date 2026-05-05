@@ -19,12 +19,12 @@ export default function CalculateButton({ onClick, loading, disabled }) {
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.4 0 0 5.4 0 12h4z"/>
           </svg>
-          Dang tinh toan...
+          Đang tính toán...
         </>
       ) : (
         <>
           <Calculator size={20} />
-          Tinh cong thuc toi uu
+          Tính công thức tối ưu
         </>
       )}
     </motion.button>

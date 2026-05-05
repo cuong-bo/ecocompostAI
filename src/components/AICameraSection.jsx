@@ -2,10 +2,10 @@
 import { Camera, Upload } from "lucide-react"
 
 const COLOR_MAP = {
-  green:  { wasteColor: "Xanh", wasteType: "Rau cu", hint: "Xanh - Giau Nito" },
-  yellow: { wasteColor: "Vang", wasteType: "Trai cay", hint: "Vang - Trung binh" },
-  brown:  { wasteColor: "Nau", wasteType: "Ba dau", hint: "Nau - Giau Carbon" },
-  dark:   { wasteColor: "Den", wasteType: "Xac ca", hint: "Den - Can theo doi" },
+  green:  { wasteColor: "Xanh",  wasteType: "Rau củ",   hint: "Xanh — Giàu Nitơ (N cao)" },
+  yellow: { wasteColor: "Vàng",  wasteType: "Trái cây", hint: "Vàng — Trung bình" },
+  brown:  { wasteColor: "Nâu",   wasteType: "Bã đậu",   hint: "Nâu — Giàu Carbon (C cao)" },
+  dark:   { wasteColor: "Đen",   wasteType: "Xác cá",   hint: "Đen — Cần theo dõi kỹ" },
 }
 
 function analyzeImageColor(canvas, ctx, img) {
@@ -50,28 +50,28 @@ export default function AICameraSection({ onAutoFill }) {
   return (
     <div className="bg-[#EFEFEF] rounded-2xl shadow-md p-5">
       <h2 className="text-[#2F3542] font-bold text-base mb-1 flex items-center gap-2">
-        🤖 AI Camera nhan dien rac
+        🤖 AI Camera nhận diện rác
       </h2>
-      <p className="text-sm text-gray-500 mb-4">Chup hoac tai anh rac de AI tu dong phan tich va dien form</p>
+      <p className="text-sm text-gray-500 mb-4">Chụp hoặc tải ảnh rác để AI tự động phân tích và điền form</p>
       <div className="grid grid-cols-2 gap-3">
         <button onClick={() => cameraRef.current?.click()}
           className="flex items-center justify-center gap-2 bg-[#2F3542] text-white rounded-xl py-3 font-semibold text-sm hover:bg-gray-700 transition">
-          <Camera size={16} /> Chup anh
+          <Camera size={16} /> Chụp ảnh
         </button>
         <button onClick={() => fileRef.current?.click()}
           className="flex items-center justify-center gap-2 bg-[#2F3542] text-white rounded-xl py-3 font-semibold text-sm hover:bg-gray-700 transition">
-          <Upload size={16} /> Upload anh
+          <Upload size={16} /> Upload ảnh
         </button>
       </div>
       <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={e => processFile(e.target.files[0])} />
       <input ref={cameraRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={e => processFile(e.target.files[0])} />
       {preview && (
         <div className="mt-4">
-          <img src={preview} alt="Preview" className="w-full h-40 object-cover rounded-xl" />
-          {analyzing && <p className="text-center text-sm text-gray-500 mt-2">Dang phan tich...</p>}
+          <img src={preview} alt="Ảnh rác đã chọn" className="w-full h-40 object-cover rounded-xl" />
+          {analyzing && <p className="text-center text-sm text-gray-500 mt-2">Đang phân tích ảnh...</p>}
           {hint && !analyzing && (
             <div className="mt-2 bg-green-50 rounded-xl px-4 py-3 text-sm text-green-700 font-medium text-center">
-              ✅ Phan tich: {hint} — Da dien form tu dong
+              ✅ Phân tích: {hint} — Đã điền form tự động
             </div>
           )}
         </div>

@@ -14,45 +14,45 @@ export default function ResultDisplay({ result, form }) {
     <div className="space-y-4">
       {result.tempWarning && (
         <div className="bg-red-100 border border-red-400 text-red-700 rounded-2xl px-4 py-3 font-semibold text-sm flex items-center gap-2">
-          🌡️ Qua nong, vi sinh co the chet! Nhiet do vuot 55°C.
+          🌡️ Quá nóng — vi sinh có thể chết! Nhiệt độ vượt 55°C.
         </div>
       )}
 
-      <Card title="San luong du kien" emoji="🧪">
+      <Card title="Sản lượng dự kiến" emoji="🧪">
         <div className="bg-gradient-to-r from-emerald-50 to-green-50 rounded-xl p-4 mb-4 text-center">
-          <p className="text-sm text-gray-500 mb-1">San luong dam huu co</p>
-          <p className="text-4xl font-extrabold text-[#0A7A52]">{result.damLuong} <span className="text-xl font-bold">lit</span></p>
-          <p className="text-xs text-gray-400 mt-1">Nito tong: {result.nitroPercent}% N</p>
+          <p className="text-sm text-gray-500 mb-1">Sản lượng đạm hữu cơ</p>
+          <p className="text-4xl font-extrabold text-[#0A7A52]">{result.damLuong} <span className="text-xl font-bold">lít</span></p>
+          <p className="text-xs text-gray-400 mt-1">Nitơ tổng: {result.nitroPercent}% N</p>
         </div>
-        <ResultRow label="IMO can dung" value={result.imoLit} unit="lit" />
-        <ResultRow label="Mat ri duong" value={result.matRiDuong} unit="lit" />
-        <ResultRow label="Nuoc pha" value={result.nuocPha} unit="lit" />
-        <ResultRow label="Do am dong u" value={result.doAmDongU} unit="%" />
-        <ResultRow label="Thoi gian dao tron" value={`${result.daoTronDays} ngay/lan`} unit="" />
-        <ResultRow label="Hoan thanh sau" value={result.hoanThanhDays} unit="ngay" highlight />
+        <ResultRow label="IMO cần dùng" value={result.imoLit} unit="lít" />
+        <ResultRow label="Mật rỉ đường" value={result.matRiDuong} unit="lít" />
+        <ResultRow label="Nước pha" value={result.nuocPha} unit="lít" />
+        <ResultRow label="Độ ẩm đống ủ" value={result.doAmDongU} unit="%" />
+        <ResultRow label="Thời gian đảo trộn" value={`${result.daoTronDays} ngày/lần`} unit="" />
+        <ResultRow label="Hoàn thành sau" value={result.hoanThanhDays} unit="ngày" highlight />
       </Card>
 
-      <Card title="Huong dan pha tuoi" emoji="💧">
+      <Card title="Hướng dẫn pha tưới" emoji="💧">
         <div className="bg-blue-50 rounded-xl p-4 mb-3 text-center">
-          <p className="text-sm text-gray-500">1 lit dam + {result.ratio} lit nuoc</p>
-          <p className="text-2xl font-extrabold text-blue-600 mt-1">{result.totalWaterLit} lit nuoc tuoi</p>
-          <p className="text-xs text-gray-400 mt-1">Tu {result.damLuong} lit dam × {result.ratio} = {result.totalWaterLit} lit</p>
+          <p className="text-sm text-gray-500">1 lít đạm + {result.ratio} lít nước</p>
+          <p className="text-2xl font-extrabold text-blue-600 mt-1">{result.totalWaterLit} lít nước tưới</p>
+          <p className="text-xs text-gray-400 mt-1">Từ {result.damLuong} lít đạm × {result.ratio} = {result.totalWaterLit} lít</p>
         </div>
         <div className="bg-amber-50 rounded-xl p-3 text-sm text-amber-800 flex items-start gap-2">
           <span>⚠️</span>
-          <span>Khong tuoi truc tiep dam dac, de chay re</span>
+          <span>Không tưới trực tiếp đạm đặc — dễ cháy rễ cây</span>
         </div>
       </Card>
 
-      <Card title="Lich tuoi thong minh" emoji="📅">
+      <Card title="Lịch tưới thông minh" emoji="📅">
         <div className="flex items-center justify-between bg-green-50 rounded-xl px-4 py-3">
-          <span className="text-sm text-[#2F3542]">Loai cay: <strong>{form.cropType}</strong></span>
-          <span className="text-lg font-extrabold text-[#0A7A52]">Tuoi moi {result.wateringDays} ngay</span>
+          <span className="text-sm text-[#2F3542]">Loại cây: <strong>{form.cropType}</strong></span>
+          <span className="text-lg font-extrabold text-[#0A7A52]">Tưới mỗi {result.wateringDays} ngày</span>
         </div>
-        {form.season === "Mua nang" && (
+        {form.season === "Mùa nắng" && (
           <div className="mt-3 bg-orange-50 rounded-xl p-3 text-sm text-orange-700 flex items-start gap-2">
             <span>☀️</span>
-            <span>Nen tuoi sang som hoac chieu mat</span>
+            <span>Nên tưới sáng sớm hoặc chiều mát để tránh bốc hơi</span>
           </div>
         )}
       </Card>

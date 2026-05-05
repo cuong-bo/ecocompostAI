@@ -8,10 +8,10 @@ export default function DieuKienSection({ form, onChange }) {
   const humVoice = useVoiceInput(v => onChange("humidity", v))
 
   return (
-    <Card title="Dieu kien" emoji="🌤️">
+    <Card title="Điều kiện" emoji="🌤️">
       <div className="grid grid-cols-2 gap-3 mb-4">
         <div>
-          <label className="text-sm text-[#2F3542] font-medium mb-1 block">Nhiet do (°C)</label>
+          <label className="text-sm text-[#2F3542] font-medium mb-1 block">Nhiệt độ (°C)</label>
           <div className="relative">
             <input type="number" min="0" max="60" placeholder="30" value={form.temperature}
               onChange={e => onChange("temperature", e.target.value)}
@@ -23,7 +23,7 @@ export default function DieuKienSection({ form, onChange }) {
           </div>
         </div>
         <div>
-          <label className="text-sm text-[#2F3542] font-medium mb-1 block">Do am (%)</label>
+          <label className="text-sm text-[#2F3542] font-medium mb-1 block">Độ ẩm (%)</label>
           <div className="relative">
             <input type="number" min="0" max="100" placeholder="70" value={form.humidity}
               onChange={e => onChange("humidity", e.target.value)}
@@ -36,11 +36,14 @@ export default function DieuKienSection({ form, onChange }) {
         </div>
       </div>
       <div>
-        <label className="text-sm text-[#2F3542] font-medium mb-1 block">Mua vu</label>
-        <select value={form.season} onChange={e => onChange("season", e.target.value)}
-          className="w-full rounded-xl border border-[#D1D5DB] px-3 py-3 text-[#2F3542] bg-white focus:outline-none focus:border-[#22C55E] focus:ring-2 focus:ring-[#22C55E]/20 transition appearance-none">
-          {SEASONS.map(s => <option key={s.value} value={s.value}>{s.emoji} {s.label}</option>)}
-        </select>
+        <label className="text-sm text-[#2F3542] font-medium mb-1 block">Mùa vụ</label>
+        <div className="relative">
+          <select value={form.season} onChange={e => onChange("season", e.target.value)}
+            className="w-full rounded-xl border border-[#D1D5DB] px-3 py-3 text-[#2F3542] bg-white focus:outline-none focus:border-[#22C55E] focus:ring-2 focus:ring-[#22C55E]/20 transition appearance-none pr-8">
+            {SEASONS.map(s => <option key={s.value} value={s.value}>{s.emoji} {s.label}</option>)}
+          </select>
+          <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">▼</span>
+        </div>
       </div>
     </Card>
   )

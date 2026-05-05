@@ -1,17 +1,20 @@
 ﻿import { useState, useRef, useCallback } from "react"
 
 const AG_CORRECTIONS = {
-  "ro cu": "Rau cu", "rau cuu": "Rau cu", "rau cú": "Rau cu",
-  "trai cây": "Trai cay", "trai cay": "Trai cay",
-  "ba dau": "Ba dau", "xac ca": "Xac ca",
-  "mua mưa": "Mua mua", "mua mợa": "Mua mua",
-  "mua nang": "Mua nang", "mua nắng": "Mua nang",
-  "rau ăn lá": "Rau an la", "rau an la": "Rau an la",
-  "lua": "Lua", "lúa": "Lua",
-  "ca chua": "Ca chua", "cà chua": "Ca chua",
-  "dua leo": "Dua leo", "dưa leo": "Dua leo",
-  "cay an trai": "Cay an trai",
-  "hoa mau": "Hoa mau", "hoa màu": "Hoa mau",
+  "ro cu": "Rau củ", "rau cuu": "Rau củ", "rau cú": "Rau củ", "rau cu": "Rau củ",
+  "trai cay": "Trái cây", "trái cây": "Trái cây",
+  "ba dau": "Bã đậu", "bã đậu": "Bã đậu",
+  "xac ca": "Xác cá", "xác cá": "Xác cá",
+  "xuong dong vat": "Xương động vật",
+  "hon hop": "Hỗn hợp", "hỗn hợp": "Hỗn hợp",
+  "mua mua": "Mùa mưa", "mùa mưa": "Mùa mưa", "mùa mợa": "Mùa mưa",
+  "mua nang": "Mùa nắng", "mùa nắng": "Mùa nắng",
+  "rau an la": "Rau ăn lá", "rau ăn lá": "Rau ăn lá",
+  "lua": "Lúa", "lúa": "Lúa",
+  "ca chua": "Cà chua", "cà chua": "Cà chua",
+  "dua leo": "Dưa leo", "dưa leo": "Dưa leo",
+  "cay an trai": "Cây ăn trái", "cây ăn trái": "Cây ăn trái",
+  "hoa mau": "Hoa màu", "hoa màu": "Hoa màu",
 }
 
 function correctText(raw) {
@@ -19,8 +22,8 @@ function correctText(raw) {
   for (const [key, val] of Object.entries(AG_CORRECTIONS)) {
     if (lower.includes(key)) return val
   }
-  const numMatch = lower.match(/(\d+)/)
-  if (numMatch) return numMatch[1]
+  const numMatch = lower.match(/(\d+(?:[.,]\d+)?)/)
+  if (numMatch) return numMatch[1].replace(",", ".")
   return raw
 }
 
@@ -30,7 +33,7 @@ export function useVoiceInput(onResult) {
 
   const startListening = useCallback(() => {
     if (!("webkitSpeechRecognition" in window) && !("SpeechRecognition" in window)) {
-      alert("Trình duyệt không hỗ trợ nhận giọng nói. Dùng Chrome hoặc Edge.")
+      alert("Trình duyệt không hỗ trợ nhận giọng nói. Vui lòng dùng Chrome hoặc Edge.")
       return
     }
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition

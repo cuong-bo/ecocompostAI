@@ -1,6 +1,6 @@
 ﻿import { DILUTION_RATIO, WATERING_SCHEDULE } from "../constants/options"
 
-const SOFT_WASTE = ["Rau cu", "Trai cay"]
+const SOFT_WASTE = ["Rau củ", "Trái cây"]
 
 function isHardWaste(wasteType) {
   return !SOFT_WASTE.includes(wasteType)
@@ -19,7 +19,7 @@ export function calculate({ wasteKg, wasteType, wasteColor, landArea, cropType, 
 
   let doAmDongU = 60
   if (wasteColor === "Xanh" && humid > 70) doAmDongU = 55
-  else if ((wasteColor === "Nau" || wasteColor === "Den") && humid > 50) doAmDongU = 65
+  else if ((wasteColor === "Nâu" || wasteColor === "Đen") && humid > 50) doAmDongU = 65
 
   const tempWarning = temp > 55
 
