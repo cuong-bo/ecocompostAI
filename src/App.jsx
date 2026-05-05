@@ -22,6 +22,15 @@ const initialForm = {
   season: "Mùa mưa",
 }
 
+const cardVariants = {
+  hidden: { opacity: 0, y: 24 },
+  visible: (i) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.1, duration: 0.4, ease: "easeOut" },
+  }),
+}
+
 export default function App() {
   const [form, setForm] = useState(initialForm)
   const [result, setResult] = useState(null)
@@ -45,22 +54,47 @@ export default function App() {
     setLoading(false)
   }
 
+  const sections = [
+    <NguyenLieuSection key="nl" form={form} onChange={handleChange} />,
+    <CanhTacSection key="ct" form={form} onChange={handleChange} />,
+    <DieuKienSection key="dk" form={form} onChange={handleChange} />,
+  ]
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0A7A52] to-[#08754F] px-4 py-8">
       <div className="max-w-lg mx-auto space-y-4">
-        <Header />
-        <NguyenLieuSection form={form} onChange={handleChange} />
-        <CanhTacSection form={form} onChange={handleChange} />
-        <DieuKienSection form={form} onChange={handleChange} />
-        <CalculateButton onClick={handleCalculate} loading={loading} disabled={!form.wasteKg} />
+        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+          <Header />
+        </motion.div>
+
+        {sections.map((section, i) => (
+          <motion.div key={i} custom={i} variants={cardVariants} initial="hidden" animate="visible">
+            {section}
+          </motion.div>
+        ))}
+
+        <motion.div custom={3} variants={cardVariants} initial="hidden" animate="visible">
+          <CalculateButton onClick={handleCalculate} loading={loading} disabled={!form.wasteKg} />
+        </motion.div>
+
         <AnimatePresence>
           {result && (
-            <motion.div key="result" initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-20}} transition={{duration:0.4}}>
+            <motion.div
+              key="result"
+              initial={{ opacity: 0, y: 20, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.45 }}
+            >
               <ResultDisplay result={result} form={form} />
             </motion.div>
           )}
         </AnimatePresence>
-        <AICameraSection onAutoFill={handleAutoFill} />
+
+        <motion.div custom={4} variants={cardVariants} initial="hidden" animate="visible">
+          <AICameraSection onAutoFill={handleAutoFill} />
+        </motion.div>
+
         <Footer />
       </div>
     </div>

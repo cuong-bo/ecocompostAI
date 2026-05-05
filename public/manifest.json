@@ -1,0 +1,13 @@
+﻿{
+  "name": "EcoCompost AI",
+  "short_name": "EcoCompost",
+  "description": "Biến rác hữu cơ thành đạm thực vật chất lượng cao",
+  "start_url": "/ecocompost-ai/",
+  "display": "standalone",
+  "background_color": "#0A7A52",
+  "theme_color": "#0A7A52",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
