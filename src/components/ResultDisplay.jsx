@@ -1,61 +1,80 @@
 ﻿import Card from "./Card"
 
-function ResultRow({ label, value, unit, highlight }) {
+function Row({ label, value }) {
   return (
-    <div className={`flex justify-between items-center py-2 border-b border-gray-100 last:border-0 ${highlight ? "text-emerald-700 font-bold" : "text-[#2F3542]"}`}>
-      <span className="text-sm">{label}</span>
-      <span className="font-semibold">{value} <span className="text-xs font-normal text-gray-500">{unit}</span></span>
+    <div className="flex justify-between items-center py-2 border-b border-gray-100 last:border-0">
+      <span className="text-sm text-gray-600">{label}</span>
+      <span className="text-sm font-semibold text-[#2F3542]">{value}</span>
     </div>
   )
 }
 
 export default function ResultDisplay({ result, form }) {
   return (
-    <div className="space-y-4">
-      {result.tempWarning && (
-        <div className="bg-red-100 border border-red-400 text-red-700 rounded-2xl px-4 py-3 font-semibold text-sm flex items-center gap-2">
+    <div className="space-y-3">
+
+      {/* Cảnh báo amber — luôn hiển thị */}
+      <div className="bg-amber-50 border border-amber-300 text-amber-800 rounded-2xl px-4 py-3 text-sm flex items-start gap-2">
+        <span className="mt-0.5">⚠️</span>
+        <span>
+          Không tưới trực tiếp đạm đặc, dễ cháy rễ.
+          {form.season === "Mùa nắng" && " Nên tưới sáng sớm hoặc chiều mát."}
+        </span>
+      </div>
+
+      {/* Cảnh báo nhiệt độ quá cao */}
+      {Number(form.temperature) > 55 && (
+        <div className="bg-red-100 border border-red-400 text-red-700 rounded-2xl px-4 py-3 text-sm font-semibold flex items-center gap-2">
           🌡️ Quá nóng — vi sinh có thể chết! Nhiệt độ vượt 55°C.
         </div>
       )}
 
-      <Card title="Sản lượng dự kiến" emoji="🧪">
-        <div className="bg-gradient-to-r from-emerald-50 to-green-50 rounded-xl p-4 mb-4 text-center">
-          <p className="text-sm text-gray-500 mb-1">Sản lượng đạm hữu cơ</p>
-          <p className="text-4xl font-extrabold text-[#0A7A52]">{result.damLuong} <span className="text-xl font-bold">lít</span></p>
-          <p className="text-xs text-gray-400 mt-1">Nitơ tổng: {result.nitroPercent}% N</p>
-        </div>
-        <ResultRow label="IMO cần dùng" value={result.imoLit} unit="lít" />
-        <ResultRow label="Mật rỉ đường" value={result.matRiDuong} unit="lít" />
-        <ResultRow label="Nước pha" value={result.nuocPha} unit="lít" />
-        <ResultRow label="Độ ẩm đống ủ" value={result.doAmDongU} unit="%" />
-        <ResultRow label="Thời gian đảo trộn" value={`${result.daoTronDays} ngày/lần`} unit="" />
-        <ResultRow label="Hoàn thành sau" value={result.hoanThanhDays} unit="ngày" highlight />
+      {/* Công thức ủ */}
+      <Card title="Công thức ủ" emoji="🌿">
+        <Row label="IMO cần dùng"      value={`${result.imoMl} ml`} />
+        <Row label="Mật rỉ đường"      value={`${result.matRiDuong} lít`} />
+        <Row label="Nước pha"          value={`${result.nuocPha} lít`} />
+        <Row label="Độ ẩm đống ủ"      value={`${result.doAmDongU}%`} />
+        <Row label="Nhiệt độ lý tưởng" value="35–45°C" />
+        <Row label="Đảo trộn"          value="3 ngày/lần" />
+        <Row label="Hoàn thành"        value="14 ngày" />
+        <Row label="Dự kiến đạm"       value="2.8% N tổng" />
       </Card>
 
+      {/* Sản lượng dự kiến — nền xanh gradient */}
+      <div className="rounded-2xl bg-gradient-to-br from-[#56AB2F] to-[#0A7A52] shadow-md p-5 text-center">
+        <p className="text-green-100 text-sm font-medium mb-1">🌿 Sản lượng dự kiến</p>
+        <p className="text-white text-5xl font-extrabold leading-none">
+          {result.damLuong} <span className="text-2xl font-bold">lít</span>
+        </p>
+        <p className="text-green-100 text-sm mt-1">đạm hữu cơ lỏng</p>
+      </div>
+
+      {/* Hướng dẫn pha tưới */}
       <Card title="Hướng dẫn pha tưới" emoji="💧">
-        <div className="bg-blue-50 rounded-xl p-4 mb-3 text-center">
-          <p className="text-sm text-gray-500">1 lít đạm + {result.ratio} lít nước</p>
-          <p className="text-2xl font-extrabold text-blue-600 mt-1">{result.totalWaterLit} lít nước tưới</p>
-          <p className="text-xs text-gray-400 mt-1">Từ {result.damLuong} lít đạm × {result.ratio} = {result.totalWaterLit} lít</p>
-        </div>
-        <div className="bg-amber-50 rounded-xl p-3 text-sm text-amber-800 flex items-start gap-2">
-          <span>⚠️</span>
-          <span>Không tưới trực tiếp đạm đặc — dễ cháy rễ cây</span>
+        <p className="text-sm text-[#2F3542] mb-3">
+          Với <strong>{form.cropType}</strong>: 1 lít đạm + <strong>{result.ratio} lít nước</strong>
+        </p>
+        <p className="text-sm font-medium text-teal-600">
+          Bạn có {result.damLuong} lít đạm → pha được{" "}
+          <strong>{result.totalWaterLit} lít</strong> nước tưới
+        </p>
+      </Card>
+
+      {/* Lịch tưới thông minh */}
+      <Card title="Lịch tưới thông minh" emoji="📅">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="font-bold text-[#2F3542]">{form.cropType}</p>
+            <p className="text-xs text-gray-400 mt-0.5">Tưới định kỳ</p>
+          </div>
+          <div className="text-right">
+            <p className="text-4xl font-extrabold text-[#0A7A52] leading-none">{result.wateringDays}</p>
+            <p className="text-xs text-gray-400 mt-0.5">ngày/lần</p>
+          </div>
         </div>
       </Card>
 
-      <Card title="Lịch tưới thông minh" emoji="📅">
-        <div className="flex items-center justify-between bg-green-50 rounded-xl px-4 py-3">
-          <span className="text-sm text-[#2F3542]">Loại cây: <strong>{form.cropType}</strong></span>
-          <span className="text-lg font-extrabold text-[#0A7A52]">Tưới mỗi {result.wateringDays} ngày</span>
-        </div>
-        {form.season === "Mùa nắng" && (
-          <div className="mt-3 bg-orange-50 rounded-xl p-3 text-sm text-orange-700 flex items-start gap-2">
-            <span>☀️</span>
-            <span>Nên tưới sáng sớm hoặc chiều mát để tránh bốc hơi</span>
-          </div>
-        )}
-      </Card>
     </div>
   )
 }
