@@ -2,9 +2,9 @@
 
 function Row({ label, value }) {
   return (
-    <div className="flex justify-between items-center py-2 border-b border-gray-100 last:border-0">
-      <span className="text-sm text-gray-600">{label}</span>
-      <span className="text-sm font-semibold text-[#2F3542]">{value}</span>
+    <div className="flex justify-between items-start py-2 border-b border-gray-100 last:border-0 gap-2">
+      <span className="text-sm text-gray-600 min-w-0">{label}</span>
+      <span className="text-sm font-semibold text-[#2F3542] whitespace-nowrap shrink-0">{value}</span>
     </div>
   )
 }
@@ -15,7 +15,7 @@ export default function ResultDisplay({ result, form }) {
 
       {/* Cảnh báo amber — luôn hiển thị */}
       <div className="bg-amber-50 border border-amber-300 text-amber-800 rounded-2xl px-4 py-3 text-sm flex items-start gap-2">
-        <span className="mt-0.5">⚠️</span>
+        <span className="mt-0.5 shrink-0">⚠️</span>
         <span>
           Không tưới trực tiếp đạm đặc, dễ cháy rễ.
           {form.season === "Mùa nắng" && " Nên tưới sáng sớm hoặc chiều mát."}
@@ -25,20 +25,20 @@ export default function ResultDisplay({ result, form }) {
       {/* Cảnh báo nhiệt độ quá cao */}
       {Number(form.temperature) > 55 && (
         <div className="bg-red-100 border border-red-400 text-red-700 rounded-2xl px-4 py-3 text-sm font-semibold flex items-center gap-2">
-          🌡️ Quá nóng — vi sinh có thể chết! Nhiệt độ vượt 55°C.
+          <span className="shrink-0">🌡️</span> Quá nóng — vi sinh có thể chết! Nhiệt độ vượt 55°C.
         </div>
       )}
 
       {/* Công thức ủ */}
-      <Card title="Công thức ủ" emoji="🌿">
-        <Row label="IMO cần dùng"      value={`${result.imoMl} ml`} />
-        <Row label="Mật rỉ đường"      value={`${result.matRiDuong} lít`} />
-        <Row label="Nước pha"          value={`${result.nuocPha} lít`} />
-        <Row label="Độ ẩm đống ủ"      value={`${result.doAmDongU}%`} />
-        <Row label="Nhiệt độ lý tưởng" value="35–45°C" />
-        <Row label="Đảo trộn"          value="3 ngày/lần" />
-        <Row label="Hoàn thành"        value="14 ngày" />
-        <Row label="Dự kiến đạm"       value="2.8% N tổng" />
+      <Card title="Công thức ủ" emoji="🧪">
+        <Row label="IMO cần dùng"       value={`${result.imoMl} ml`} />
+        <Row label="Mật rỉ đường"       value={`${result.matRiDuong} lít`} />
+        <Row label="Nước pha"           value={`${result.nuocPha} lít`} />
+        <Row label="Độ ẩm đống ủ"       value={`${result.doAmDongU}%`} />
+        <Row label="Nhiệt độ lý tưởng"  value="35–45°C" />
+        <Row label="Đảo trộn"           value="3 ngày/lần" />
+        <Row label="Hoàn thành"         value="14 ngày" />
+        <Row label="Dự kiến đạm"        value="2.8% N tổng" />
       </Card>
 
       {/* Sản lượng dự kiến — nền xanh gradient */}
