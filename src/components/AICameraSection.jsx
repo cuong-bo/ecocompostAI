@@ -45,6 +45,8 @@ const WASTE_META = {
 }
 
 // ── Gemini Flash ──────────────────────────────────────────────────────────────
+const sleep = ms => new Promise(r => setTimeout(r, ms))
+
 async function analyzeWithGemini(imageBase64, mimeType) {
   const prompt = `Bạn là chuyên gia nông nghiệp hữu cơ. Quan sát ảnh rác hữu cơ và trả về JSON hợp lệ (không markdown).
 
@@ -53,27 +55,36 @@ Chọn wasteColor từ: "Xanh", "Vàng", "Nâu", "Đen"
 
 {"wasteType":"...","wasteColor":"...","humidity":<50-80>,"confidence":<0.0-1.0>,"description":"mô tả ngắn tiếng Việt"}`
 
-  const res = await fetch(`${GEMINI_URL}?key=${GEMINI_KEY}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      contents: [{ parts: [{ text: prompt }, { inline_data: { mime_type: mimeType, data: imageBase64 } }] }],
-      generationConfig: { temperature: 0.1, maxOutputTokens: 200 },
-    }),
+  const body = JSON.stringify({
+    contents: [{ parts: [{ text: prompt }, { inline_data: { mime_type: mimeType, data: imageBase64 } }] }],
+    generationConfig: { temperature: 0.1, maxOutputTokens: 200 },
   })
-  if (!res.ok) throw new Error(`HTTP ${res.status}`)
-  const data = await res.json()
-  const text = (data.candidates?.[0]?.content?.parts?.[0]?.text || "")
-    .replace(/```json\n?/g, "").replace(/```\n?/g, "").trim()
-  const parsed = JSON.parse(text)
-  const meta = WASTE_META[parsed.wasteType] || WASTE_META["Hỗn hợp"]
-  return {
-    ...meta,
-    wasteColor: parsed.wasteColor || meta.wasteColor,
-    humidity: String(parsed.humidity || meta.humidity),
-    confidence: Number(parsed.confidence) || 0.92,
-    predictedClass: parsed.description || parsed.wasteType,
-    method: "gemini",
+
+  // Retry với exponential backoff khi gặp 429 (rate limit)
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const res = await fetch(`${GEMINI_URL}?key=${GEMINI_KEY}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body,
+    })
+    if (res.status === 429) {
+      if (attempt < 2) { await sleep(2000 * (attempt + 1)); continue }
+      throw new Error("Gemini quá tải (429) — đã thử 3 lần, chuyển sang MobileNet")
+    }
+    if (!res.ok) throw new Error(`HTTP ${res.status}`)
+    const data = await res.json()
+    const text = (data.candidates?.[0]?.content?.parts?.[0]?.text || "")
+      .replace(/```json\n?/g, "").replace(/```\n?/g, "").trim()
+    const parsed = JSON.parse(text)
+    const meta = WASTE_META[parsed.wasteType] || WASTE_META["Hỗn hợp"]
+    return {
+      ...meta,
+      wasteColor: parsed.wasteColor || meta.wasteColor,
+      humidity: String(parsed.humidity || meta.humidity),
+      confidence: Number(parsed.confidence) || 0.92,
+      predictedClass: parsed.description || parsed.wasteType,
+      method: "gemini",
+    }
   }
 }
 
