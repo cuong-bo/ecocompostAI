@@ -2,9 +2,11 @@
 
 const SOFT_WASTE = ["Rau củ", "Trái cây"]
 
-export function calculate({ wasteKg, wasteType, wasteColor, cropType, humidity }) {
+export function calculate({ wasteKg, wasteType, wasteColor, cropType, humidity, landArea, landUnit }) {
   const kg = Number(wasteKg) || 0
   const humid = Number(humidity) || 60
+  const area = Number(landArea) || 0
+  const areaM2 = landUnit === "ha" ? area * 10000 : area
 
   // IMO tính bằng ml, hiển thị ml
   const imoMl = (!SOFT_WASTE.includes(wasteType) ? kg * 4 : kg * 2)
@@ -30,5 +32,6 @@ export function calculate({ wasteKg, wasteType, wasteColor, cropType, humidity }
     ratio,
     totalWaterLit: totalWaterLit.toFixed(0),
     wateringDays,
+    compostPerM2: areaM2 > 0 ? (kg / areaM2).toFixed(2) : null,
   }
 }

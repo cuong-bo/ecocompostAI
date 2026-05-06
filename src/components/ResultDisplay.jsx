@@ -59,6 +59,12 @@ export default function ResultDisplay({ result, form }) {
           Bạn có {result.damLuong} lít đạm → pha được{" "}
           <strong>{result.totalWaterLit} lít</strong> nước tưới
         </p>
+        {result.compostPerM2 && (
+          <p className="text-sm font-medium text-purple-600 mt-2">
+            📐 Mật độ phân: <strong>{result.compostPerM2} kg/m²</strong>
+            {form.landUnit === "ha" && ` (${(Number(result.compostPerM2) * 10000).toFixed(0)} kg/ha)`}
+          </p>
+        )}
       </Card>
 
       {/* Lịch tưới thông minh */}

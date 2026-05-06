@@ -10,7 +10,7 @@ const KEYWORD_MAP = [
     keywords: [
       "broccoli","cauliflower","cabbage","brussels sprout","zucchini","cucumber",
       "bell pepper","artichoke","leek","eggplant","squash","spinach","lettuce",
-      "kale","celery","carrot","corn","asparagus","mushroom","cardoon","acorn",
+      "kale","celery","carrot","corn","asparagus","mushroom","cardoon","acorn squash",
       "butternut","bok choy","radish","turnip","beet","beetroot","potato",
       "sweet potato","yam","taro","ginger","garlic","onion","shallot","scallion",
       "fennel","parsley","cilantro","mint","basil","thyme","rosemary","dill",
@@ -34,7 +34,7 @@ const KEYWORD_MAP = [
       "mandarin","tangerine","clementine","grapefruit","kumquat","soursop",
       "breadfruit","mangosteen","sapodilla","cantaloupe","honeydew","boysenberry",
       "blueberry","raspberry","blackberry","cranberry","gooseberry","mulberry",
-      "currant","elderberry","fig","pomelo","yuzu","blood orange","green apple",
+      "currant","elderberry","pomelo","yuzu","blood orange","green apple",
       "red apple","yellow banana","overripe","ripe fruit","fruit peel","fruit skin",
       "fruit","citrus","berry","tropical fruit",
     ],
@@ -50,7 +50,7 @@ const KEYWORD_MAP = [
       "halibut","flounder","sole","snapper","grouper","barracuda","mahi","swordfish",
       "octopus","squid","cuttlefish","scallop","mussel","abalone","sea urchin",
       "sea cucumber","jellyfish","prawn","crawfish","crayfish","langostino",
-      "barnacle","geoduck","whelk","periwinkle","clam","cockle","razor clam",
+      "barnacle","geoduck","whelk","periwinkle","cockle","razor clam",
       "smelt","whiting","pollock","haddock","pangasius","basa","snakehead",
       "fish scale","fish bone","fish tail","seafood","shellfish","crustacean",
     ],
@@ -180,9 +180,16 @@ function analyzeByColor(imgEl) {
   const avgS = totalS / pixCount
   const avgV = totalV / pixCount
 
-  // Tìm màu chiếm đa số
-  const dominant = Object.entries(colorVotes).sort((a, b) => b[1] - a[1])[0][0]
+  // Tìm màu chiếm đa số — guard khi total=0 (ảnh xám trung tính)
   const total = Object.values(colorVotes).reduce((a, b) => a + b, 0)
+  if (total === 0) {
+    const maxBin = hueBins.indexOf(Math.max(...hueBins))
+    if (maxBin >= 6 && maxBin <= 15) {
+      return { ...KEYWORD_MAP[0], confidence: 0.38, predictedClass: "tông xanh lá", method: "color" }
+    }
+    return { ...KEYWORD_MAP[3], confidence: 0.32, predictedClass: "không xác định rõ", method: "color" }
+  }
+  const dominant = Object.entries(colorVotes).sort((a, b) => b[1] - a[1])[0][0]
   const dominantRatio = colorVotes[dominant] / total
 
   // Kết hợp màu + ngưỡng để phán đoán loại rác
@@ -214,20 +221,26 @@ function analyzeByColor(imgEl) {
 export default function AICameraSection({ onAutoFill }) {
   const fileRef = useRef(null)
   const cameraRef = useRef(null)
+  const previewUrlRef = useRef(null)
   const [preview, setPreview] = useState(null)
   const [profile, setProfile] = useState(null)
   const [analyzing, setAnalyzing] = useState(false)
   const [analyzeStep, setAnalyzeStep] = useState("")
   const [modelReady, setModelReady] = useState(false)
+  const [modelError, setModelError] = useState(false)
 
   useEffect(() => {
-    getModel().then(() => setModelReady(true)).catch(() => {})
+    getModel().then(() => setModelReady(true)).catch(() => setModelError(true))
+    return () => { if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current) }
   }, [])
 
   async function processFile(file) {
     if (!file) return
     setAnalyzing(true); setProfile(null)
-    const url = URL.createObjectURL(file); setPreview(url)
+    if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current)
+    const url = URL.createObjectURL(file)
+    previewUrlRef.current = url
+    setPreview(url)
     const img = new Image()
     img.onload = async () => {
       let result = null
@@ -270,9 +283,11 @@ export default function AICameraSection({ onAutoFill }) {
     <div className="bg-[#EFEFEF] rounded-2xl shadow-md p-5">
       <h2 className="text-[#2F3542] font-bold text-base mb-1 flex items-center gap-2">
         🤖 AI Camera nhận diện rác
-        {modelReady
-          ? <span className="text-xs text-green-600 font-normal flex items-center gap-1"><Cpu size={11}/> MobileNet + HSV</span>
-          : <span className="text-xs text-amber-500 font-normal">Đang tải AI...</span>
+        {modelError
+          ? <span className="text-xs text-red-400 font-normal">⚠️ Không tải được AI</span>
+          : modelReady
+            ? <span className="text-xs text-green-600 font-normal flex items-center gap-1"><Cpu size={11}/> MobileNet + HSV</span>
+            : <span className="text-xs text-amber-500 font-normal">Đang tải AI...</span>
         }
       </h2>
       <p className="text-sm text-gray-500 mb-4">Chụp hoặc tải ảnh rác — AI tự động nhận diện và điền form</p>

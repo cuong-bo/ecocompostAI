@@ -12,7 +12,12 @@ export function saveCalculation(form, result) {
   history.unshift(entry)
   // Keep max 200 records
   const trimmed = history.slice(0, 200)
-  localStorage.setItem(HISTORY_KEY, JSON.stringify(trimmed))
+  try {
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(trimmed))
+  } catch {
+    // QuotaExceededError: giảm xuống 100 bản ghi và thử lại
+    try { localStorage.setItem(HISTORY_KEY, JSON.stringify(trimmed.slice(0, 100))) } catch {}
+  }
   return entry
 }
 

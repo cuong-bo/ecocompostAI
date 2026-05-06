@@ -160,12 +160,10 @@ function DashboardPanel({ onLogout }) {
 }
 
 export default function AdminOverlay({ open, onClose }) {
-  const [authed, setAuthed] = useState(false)
+  const [authed, setAuthed] = useState(() => sessionStorage.getItem("eco_admin") === "1")
 
-  // Reset login state when overlay closes
-  useEffect(() => {
-    if (!open) setAuthed(false)
-  }, [open])
+  function handleLogin() { sessionStorage.setItem("eco_admin", "1"); setAuthed(true) }
+  function handleLogout() { sessionStorage.removeItem("eco_admin"); setAuthed(false) }
 
   // Close on Escape
   useEffect(() => {
@@ -208,8 +206,8 @@ export default function AdminOverlay({ open, onClose }) {
             </div>
 
             {authed
-              ? <DashboardPanel onLogout={() => setAuthed(false)} />
-              : <LoginPanel onLogin={() => setAuthed(true)} onClose={onClose} />
+              ? <DashboardPanel onLogout={handleLogout} />
+              : <LoginPanel onLogin={handleLogin} onClose={onClose} />
             }
           </motion.div>
         </>
