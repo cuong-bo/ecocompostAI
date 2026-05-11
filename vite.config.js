@@ -15,5 +15,5 @@ export default defineConfig({
       manifest: false, // dùng manifest.json có sẵn trong public/
     }),
   ],
-  base: '/ecocompost-ai/',
+  base: '/ecocompostAI/',
 })
