@@ -10,6 +10,8 @@ export default defineConfig({
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
         cleanupOutdatedCaches: true,
+        skipWaiting: true,
+        clientsClaim: true,
       },
       includeAssets: ['favicon.svg', 'logo.png', 'icons.svg'],
       manifest: false, // dùng manifest.json có sẵn trong public/
