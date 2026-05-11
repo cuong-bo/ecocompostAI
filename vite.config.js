@@ -29,5 +29,7 @@ export default defineConfig({
       manifest: false, // dùng manifest.json có sẵn trong public/
     }),
   ],
-  base: '/ecocompostAI/',
+  base: process.env.GITHUB_REPOSITORY === 'cuong-bo/ecocompostAI'
+    ? '/ecocompostAI/'
+    : '/ecocompost-ai/',
 })
