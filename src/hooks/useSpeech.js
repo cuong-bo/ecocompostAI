@@ -1,6 +1,14 @@
 import { useState, useEffect, useCallback } from "react"
 
+// --- module-level singleton: tất cả SpeakButton dùng chung state ---
 let voicesLoaded = false
+let currentlySpeaking = false
+const listeners = new Set()
+
+function notifyListeners(val) {
+  currentlySpeaking = val
+  listeners.forEach(fn => fn(val))
+}
 
 function getVietnameseVoice() {
   const voices = window.speechSynthesis.getVoices()
@@ -28,7 +36,7 @@ function normalizeTextForSpeech(text) {
 }
 
 export function useSpeech() {
-  const [speaking, setSpeaking] = useState(false)
+  const [speaking, setSpeaking] = useState(currentlySpeaking)
 
   useEffect(() => {
     // Tải danh sách giọng — cần thiết trên Chrome (async)
@@ -36,7 +44,12 @@ export function useSpeech() {
       window.speechSynthesis.getVoices()
       window.speechSynthesis.onvoiceschanged = () => { voicesLoaded = true }
     }
-    return () => { window.speechSynthesis?.cancel() }
+    // Đăng ký nhận thông báo khi speaking thay đổi từ instance khác
+    listeners.add(setSpeaking)
+    return () => {
+      listeners.delete(setSpeaking)
+      window.speechSynthesis?.cancel()
+    }
   }, [])
 
   const speak = useCallback((text) => {
@@ -48,15 +61,15 @@ export function useSpeech() {
     utter.pitch = 1
     const voice = getVietnameseVoice()
     if (voice) utter.voice = voice
-    utter.onstart = () => setSpeaking(true)
-    utter.onend = () => setSpeaking(false)
-    utter.onerror = () => setSpeaking(false)
+    utter.onstart = () => notifyListeners(true)
+    utter.onend   = () => notifyListeners(false)
+    utter.onerror = () => notifyListeners(false)
     window.speechSynthesis.speak(utter)
   }, [])
 
   const stop = useCallback(() => {
     window.speechSynthesis?.cancel()
-    setSpeaking(false)
+    notifyListeners(false)
   }, [])
 
   return { speak, stop, speaking }
