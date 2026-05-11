@@ -8,10 +8,22 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
+        // Chỉ cache ảnh và font — KHÔNG cache JS/CSS để iOS luôn tải bản mới
+        globPatterns: ['**/*.{ico,png,svg,woff2}'],
         cleanupOutdatedCaches: true,
         skipWaiting: true,
         clientsClaim: true,
+        runtimeCaching: [
+          {
+            // JS và CSS: luôn lấy từ network trước, cache chỉ là fallback
+            urlPattern: /\.(?:js|css)$/,
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'assets-cache',
+              expiration: { maxAgeSeconds: 60 }, // hết hạn sau 60 giây
+            },
+          },
+        ],
       },
       includeAssets: ['favicon.svg', 'logo.png', 'icons.svg'],
       manifest: false, // dùng manifest.json có sẵn trong public/
