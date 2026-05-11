@@ -12,7 +12,7 @@ export default function NguyenLieuSection({ form, onChange }) {
       <div className="mb-4">
         <label className="text-sm text-[#2F3542] font-medium mb-1 flex items-center gap-1">
           Số kg rác hữu cơ
-          <SpeakButton text="Nhập số kilogram rác hữu cơ bạn có. Ví dụ nhập 50 nếu có 50 kilogram rác." />
+          <SpeakButton text="Nhập số ki lô gam rác hữu cơ bạn có. Ví dụ nhập 50 nếu có 50 ki lô gam rác." />
         </label>
         <div className="relative">
           <input

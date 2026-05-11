@@ -1,7 +1,10 @@
-﻿// Local storage key for calculation history
+﻿import { saveToCloud } from "./firestore"
+
+// Local storage key for calculation history
 const HISTORY_KEY = "ecocompost_history"
 
 export function saveCalculation(form, result) {
+  saveToCloud(form, result) // gửi lên Firestore song song, không block
   const history = loadHistory()
   const entry = {
     id: Date.now().toString(),

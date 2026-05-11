@@ -1,7 +1,8 @@
 ﻿import { useState, useEffect, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { X, LogOut, ClipboardList, BarChart2, FileDown, Leaf } from "lucide-react"
-import { loadHistory, clearHistory, deleteRecord } from "../lib/storage"
+import { clearHistory, deleteRecord } from "../lib/storage"
+import { loadAllCalculations } from "../lib/firestore"
 import AdminHistory from "./AdminHistory"
 import AdminCharts from "./AdminCharts"
 import AdminExport from "./AdminExport"
@@ -80,9 +81,17 @@ function LoginPanel({ onLogin, onClose }) {
 
 function DashboardPanel({ onLogout }) {
   const [tab, setTab] = useState("history")
-  const [history, setHistory] = useState(() => loadHistory())
+  const [history, setHistory] = useState([])
+  const [loading, setLoading] = useState(true)
 
-  const refresh = useCallback(() => setHistory(loadHistory()), [])
+  const refresh = useCallback(async () => {
+    setLoading(true)
+    const data = await loadAllCalculations()
+    setHistory(data)
+    setLoading(false)
+  }, [])
+
+  useEffect(() => { refresh() }, [refresh])
 
   function handleClearAll() {
     if (window.confirm("Xóa toàn bộ lịch sử? Không thể khôi phục!")) {
@@ -128,7 +137,13 @@ function DashboardPanel({ onLogout }) {
       {/* Scrollable content */}
       <div className="flex-1 overflow-y-auto px-4 pb-6">
         <div className="bg-white rounded-2xl p-4">
-          {tab === "history" && (
+          {loading && (
+            <div className="text-center py-8 text-gray-400 text-sm">
+              <div className="animate-spin text-2xl mb-2">⏳</div>
+              Đang tải dữ liệu từ cloud...
+            </div>
+          )}
+          {!loading && tab === "history" && (
             <>
               <div className="flex items-center justify-between mb-3">
                 <h3 className="font-bold text-[#2F3542] text-sm">Lịch sử tính toán</h3>
@@ -141,13 +156,13 @@ function DashboardPanel({ onLogout }) {
               <AdminHistory history={history} onRefresh={refresh} />
             </>
           )}
-          {tab === "charts" && (
+          {!loading && tab === "charts" && (
             <>
               <h3 className="font-bold text-[#2F3542] text-sm mb-3">Biểu đồ thống kê</h3>
               <AdminCharts history={history} />
             </>
           )}
-          {tab === "export" && (
+          {!loading && tab === "export" && (
             <>
               <h3 className="font-bold text-[#2F3542] text-sm mb-3">Xuất dữ liệu</h3>
               <AdminExport history={history} />

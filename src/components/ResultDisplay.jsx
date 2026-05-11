@@ -1,4 +1,6 @@
-﻿import Card from "./Card"
+import Card from "./Card"
+import { useSpeech } from "../hooks/useSpeech"
+import { Volume2, VolumeX } from "lucide-react"
 
 function Row({ label, value }) {
   return (
@@ -9,9 +11,60 @@ function Row({ label, value }) {
   )
 }
 
+function buildResultText(result, form) {
+  const parts = [
+    `Kết quả tính toán phân bón hữu cơ.`,
+    `Sản lượng dự kiến: ${result.damLuong} lít đạm hữu cơ lỏng.`,
+    `Công thức ủ: chế phẩm I M O cần dùng ${result.imoMl} mi li lít.`,
+    `Mật rỉ đường ${result.matRiDuong} lít.`,
+    `Nước pha ${result.nuocPha} lít.`,
+    `Độ ẩm đống ủ ${result.doAmDongU} phần trăm.`,
+    `Nhiệt độ lý tưởng từ 35 đến 45 độ xê.`,
+    `Đảo trộn 3 ngày một lần. Hoàn thành sau 14 ngày.`,
+    `Hướng dẫn pha tưới cho ${form.cropType}: 1 lít đạm pha với ${result.ratio} lít nước.`,
+    `Bạn có ${result.damLuong} lít đạm, pha được ${result.totalWaterLit} lít nước tưới.`,
+  ]
+
+  if (result.compostPerM2) {
+    parts.push(`Mật độ phân bón: ${result.compostPerM2} ki lô gam trên mét vuông.`)
+    if (form.landUnit === "ha") {
+      parts.push(`Tương đương ${(Number(result.compostPerM2) * 10000).toFixed(0)} ki lô gam trên héc ta.`)
+    }
+  }
+
+  parts.push(`Lịch tưới: ${form.cropType} tưới định kỳ ${result.wateringDays} ngày một lần.`)
+
+  if (Number(form.temperature) > 55) {
+    parts.push(`Cảnh báo: nhiệt độ vượt 55 độ xê, vi sinh có thể chết!`)
+  }
+
+  return parts.join(" ")
+}
+
 export default function ResultDisplay({ result, form }) {
+  const { speak, stop, speaking } = useSpeech()
+
+  function handleSpeak() {
+    if (speaking) { stop(); return }
+    speak(buildResultText(result, form))
+  }
+
   return (
     <div className="space-y-3">
+
+      {/* Nút đọc kết quả */}
+      <button
+        type="button"
+        onClick={handleSpeak}
+        className={`w-full flex items-center justify-center gap-2 py-3 rounded-2xl font-semibold text-sm transition-all duration-200 ${
+          speaking
+            ? "bg-blue-100 text-blue-600 border-2 border-blue-400 animate-pulse"
+            : "bg-[#E8F5E9] text-[#0A7A52] border-2 border-[#56AB2F] hover:bg-[#C8E6C9]"
+        }`}
+      >
+        {speaking ? <VolumeX size={18} /> : <Volume2 size={18} />}
+        {speaking ? "Dừng đọc" : "Nghe kết quả"}
+      </button>
 
       {/* Cảnh báo amber — luôn hiển thị */}
       <div className="bg-amber-50 border border-amber-300 text-amber-800 rounded-2xl px-4 py-3 text-sm flex items-start gap-2">

@@ -14,7 +14,7 @@ export default function DieuKienSection({ form, onChange }) {
         <div>
           <label className="text-sm text-[#2F3542] font-medium mb-1 flex items-center gap-1">
             Nhiệt độ (°C)
-            <SpeakButton text="Nhập nhiệt độ môi trường hiện tại tính bằng độ C. Ví dụ nhập 30 nếu nhiệt độ là 30 độ C. Nhiệt độ lý tưởng để ủ phân là từ 35 đến 45 độ C." />
+            <SpeakButton text="Nhập nhiệt độ môi trường hiện tại tính bằng độ xê. Ví dụ nhập 30 nếu nhiệt độ là 30 độ xê. Nhiệt độ lý tưởng để ủ phân là từ 35 đến 45 độ xê." />
           </label>
           <div className="relative">
             <input type="number" min="0" max="60" placeholder="30" value={form.temperature}
