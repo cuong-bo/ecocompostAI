@@ -42,10 +42,10 @@ function buildResultText(result, form) {
 }
 
 export default function ResultDisplay({ result, form }) {
-  const { speak, stop, speaking } = useSpeech()
+  const { speak, stop, playing } = useSpeech()
 
   function handleSpeak() {
-    if (speaking) { stop(); return }
+    if (playing) { stop(); return }
     speak(buildResultText(result, form))
   }
 
@@ -57,13 +57,13 @@ export default function ResultDisplay({ result, form }) {
         type="button"
         onClick={handleSpeak}
         className={`w-full flex items-center justify-center gap-2 py-3 rounded-2xl font-semibold text-sm transition-all duration-200 ${
-          speaking
+          playing
             ? "bg-blue-100 text-blue-600 border-2 border-blue-400 animate-pulse"
             : "bg-[#E8F5E9] text-[#0A7A52] border-2 border-[#56AB2F] hover:bg-[#C8E6C9]"
         }`}
       >
-        {speaking ? <VolumeX size={18} /> : <Volume2 size={18} />}
-        {speaking ? "Dừng đọc" : "Nghe kết quả"}
+        {playing ? <VolumeX size={18} /> : <Volume2 size={18} />}
+        {playing ? "Dừng đọc" : "Nghe kết quả"}
       </button>
 
       {/* Cảnh báo amber — luôn hiển thị */}
