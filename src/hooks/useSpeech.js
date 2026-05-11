@@ -11,6 +11,22 @@ function getVietnameseVoice() {
   )
 }
 
+// Chuẩn hoá ký hiệu đặc biệt thành chữ đọc được trước khi đưa vào TTS
+function normalizeTextForSpeech(text) {
+  return text
+    .replace(/°C/g, "độ xê")
+    .replace(/°F/g, "độ phờ")
+    .replace(/°/g, "độ")
+    .replace(/kg\/m²/g, "ki lô gam trên mét vuông")
+    .replace(/kg\/ha/g, "ki lô gam trên héc ta")
+    .replace(/m²/g, "mét vuông")
+    .replace(/km²/g, "ki lô mét vuông")
+    .replace(/\bml\b/g, "mi li lít")
+    .replace(/\bkg\b/g, "ki lô gam")
+    .replace(/\bha\b/g, "héc ta")
+    .replace(/%/g, "phần trăm")
+}
+
 export function useSpeech() {
   const [speaking, setSpeaking] = useState(false)
 
@@ -26,7 +42,7 @@ export function useSpeech() {
   const speak = useCallback((text) => {
     if (!window.speechSynthesis) return
     window.speechSynthesis.cancel()
-    const utter = new SpeechSynthesisUtterance(text)
+    const utter = new SpeechSynthesisUtterance(normalizeTextForSpeech(text))
     utter.lang = "vi-VN"
     utter.rate = 0.88
     utter.pitch = 1
